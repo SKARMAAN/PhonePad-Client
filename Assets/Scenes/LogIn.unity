@@ -790,7 +790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa03bd5bdb14ea84f898a096b6e73597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: 0
+  currentLanguage: 2
 --- !u!1 &139849889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,7 +1453,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: https://aileck.itch.io/phonepad-web
+          m_StringArgument: https://aileck.itch.io/phone2pad
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &209755808
@@ -6105,7 +6105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -88.00012, y: -30}
+  m_AnchoredPosition: {x: -88, y: -30}
   m_SizeDelta: {x: -265.3235, y: 442.9485}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &718721396
@@ -7201,7 +7201,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &984213695
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11393,7 +11393,7 @@ RectTransform:
   m_Father: {fileID: 929542332}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11517,7 +11517,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1694352897}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 447438914}
+        m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
+        m_MethodName: OpenURL
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: https://pan.baidu.com/s/1_C3Rm7Ph1bItM23WhCVtwA?pwd=nyip
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1694352897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11725,7 +11737,7 @@ RectTransform:
   m_Father: {fileID: 1367363415}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12975,7 +12987,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1935142838
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14282,10 +14294,10 @@ RectTransform:
   - {fileID: 999176712}
   m_Father: {fileID: 463998385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.12469127}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.8701146, y: 0}
+  m_AnchorMax: {x: 1, y: 0.13273555}
+  m_AnchoredPosition: {x: 0, y: -3}
+  m_SizeDelta: {x: 0, y: -6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2123330668
 MonoBehaviour:

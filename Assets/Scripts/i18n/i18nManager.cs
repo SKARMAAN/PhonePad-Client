@@ -162,7 +162,7 @@ public class i18nManager : MonoBehaviour
 
     public void LoadConfigurationLanguage()
     {
-        string langPreference = PlayerPrefs.GetString(langPererence, Language.en.ToString());
+        string langPreference = PlayerPrefs.GetString(langPererence, currentLanguage.ToString());
         if (System.Enum.TryParse(langPreference, out Language language))
         {
             currentLanguage = language;
