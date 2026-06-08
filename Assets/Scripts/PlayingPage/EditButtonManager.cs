@@ -9,6 +9,10 @@ using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class EditButtonManager : MonoBehaviour
 {
+    private const int ColumnCount = 5;
+    private const float MinButtonScale = 0.25f;
+    private const float MaxButtonScale = 3.0f;
+
     [System.Serializable]
     public class TableData
     {
@@ -16,6 +20,7 @@ public class EditButtonManager : MonoBehaviour
         public bool toggle1;          // Is visible
         public bool toggle2;          // Swipe to activate
         public bool toggle3;          // Is toggle
+        public float scale;           // Uniform scale
     }
 
     private RectTransform scrollViewRect;
@@ -48,7 +53,8 @@ public class EditButtonManager : MonoBehaviour
             image2D = null,
             toggle1 = false,
             toggle2 = false,
-            toggle3 = false
+            toggle3 = false,
+            scale = 1f
         });
 
         // Get current gamepad type
@@ -83,7 +89,12 @@ public class EditButtonManager : MonoBehaviour
                     image2D = buttonProfile.iconImage,
                     toggle1 = buttonProfile.isVisible,
                     toggle2 = !buttonProfile.pressToActivate,
-                    toggle3 = buttonProfile.toggle
+                    toggle3 = buttonProfile.toggle,
+                    scale = Mathf.Clamp(
+                        buttonProfile.scale.x <= 0 ? 1f : buttonProfile.scale.x,
+                        MinButtonScale,
+                        MaxButtonScale
+                    )
                 });
             }
         }
@@ -178,7 +189,7 @@ public class EditButtonManager : MonoBehaviour
         scrollRect.decelerationRate = 0.135f;
         scrollRect.verticalScrollbar = scrollbar;
 
-        float totalWidth = (cellWidth * 4) + (spacing * 3);
+        float totalWidth = (cellWidth * ColumnCount) + (spacing * (ColumnCount - 1));
         scrollViewRect.sizeDelta = new Vector2(totalWidth + 20, viewportHeight); 
     }
     private void CreateTable()
@@ -190,7 +201,6 @@ public class EditButtonManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        float totalWidth = (cellWidth * 4) + (spacing * 3);
         float totalHeight = (dataList.Count * cellHeight) + ((dataList.Count - 1) * spacing);
         
         tablePanel.sizeDelta = new Vector2(0, totalHeight); 
@@ -251,12 +261,14 @@ public class EditButtonManager : MonoBehaviour
         string isVisibleText = i18nManager.Instance.Translate("play_is_visible");
         string swipeToTriggerText = i18nManager.Instance.Translate("play_swipe_to_trigger");
         string toggleTriggerText = i18nManager.Instance.Translate("play_toggle_to_trigger");
+        string buttonSizeText = i18nManager.Instance.Translate("play_button_size");
 
         if (buttonProfile != null)
         {
             CreateToggleCell(rowIndex, 1, isVisibleText, data.toggle1, buttonProfile, (value) => buttonProfile.isVisible = value);
             CreateToggleCell(rowIndex, 2, swipeToTriggerText, data.toggle2, buttonProfile, (value) => buttonProfile.pressToActivate = !value);
             CreateToggleCell(rowIndex, 3, toggleTriggerText, data.toggle3, buttonProfile, (value) => buttonProfile.toggle = value);
+            CreateScaleSliderCell(rowIndex, 4, buttonSizeText, data.scale, buttonProfile);
         }
         else
         {
@@ -264,6 +276,7 @@ public class EditButtonManager : MonoBehaviour
             CreateToggleCell(rowIndex, 1, isVisibleText, false);
             CreateToggleCell(rowIndex, 2, swipeToTriggerText, false);
             CreateToggleCell(rowIndex, 3, toggleTriggerText, false);
+            CreateCell(rowIndex, 4, buttonSizeText);
         }
     }
 
@@ -363,6 +376,94 @@ public class EditButtonManager : MonoBehaviour
             checkmarkRect.sizeDelta = Vector2.zero;
             checkmarkRect.anchoredPosition = Vector2.zero;
         }
+    }
+
+    private void CreateScaleSliderCell(int rowIndex, int colIndex, string label, float value, ButtonProfile buttonProfile)
+    {
+        GameObject cellObj = CreateCell(rowIndex, colIndex, label);
+
+        if (rowIndex == 0)
+        {
+            return;
+        }
+
+        GameObject sliderObj = new GameObject("Slider");
+        sliderObj.transform.SetParent(cellObj.transform, false);
+        Slider slider = sliderObj.AddComponent<Slider>();
+        slider.minValue = MinButtonScale;
+        slider.maxValue = MaxButtonScale;
+        slider.wholeNumbers = false;
+        slider.value = Mathf.Clamp(value, MinButtonScale, MaxButtonScale);
+
+        RectTransform sliderRect = sliderObj.GetComponent<RectTransform>();
+        sliderRect.anchorMin = new Vector2(0.1f, 0.25f);
+        sliderRect.anchorMax = new Vector2(0.9f, 0.75f);
+        sliderRect.sizeDelta = Vector2.zero;
+        sliderRect.anchoredPosition = Vector2.zero;
+
+        GameObject backgroundObj = new GameObject("Background");
+        backgroundObj.transform.SetParent(sliderObj.transform, false);
+        Image backgroundImage = backgroundObj.AddComponent<Image>();
+        backgroundImage.color = new Color(1f, 1f, 1f, 0.35f);
+
+        RectTransform backgroundRect = backgroundObj.GetComponent<RectTransform>();
+        backgroundRect.anchorMin = Vector2.zero;
+        backgroundRect.anchorMax = Vector2.one;
+        backgroundRect.sizeDelta = Vector2.zero;
+        backgroundRect.anchoredPosition = Vector2.zero;
+
+        GameObject fillAreaObj = new GameObject("Fill Area");
+        fillAreaObj.transform.SetParent(sliderObj.transform, false);
+        RectTransform fillAreaRect = fillAreaObj.AddComponent<RectTransform>();
+        fillAreaRect.anchorMin = new Vector2(0f, 0.25f);
+        fillAreaRect.anchorMax = new Vector2(1f, 0.75f);
+        fillAreaRect.offsetMin = new Vector2(10f, 0f);
+        fillAreaRect.offsetMax = new Vector2(-10f, 0f);
+
+        GameObject fillObj = new GameObject("Fill");
+        fillObj.transform.SetParent(fillAreaObj.transform, false);
+        Image fillImage = fillObj.AddComponent<Image>();
+        fillImage.color = new Color(0f, 0f, 0f, 0.65f);
+        RectTransform fillRect = fillObj.GetComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero;
+        fillRect.anchorMax = Vector2.one;
+        fillRect.sizeDelta = Vector2.zero;
+        fillRect.anchoredPosition = Vector2.zero;
+
+        GameObject handleSlideAreaObj = new GameObject("Handle Slide Area");
+        handleSlideAreaObj.transform.SetParent(sliderObj.transform, false);
+        RectTransform handleSlideAreaRect = handleSlideAreaObj.AddComponent<RectTransform>();
+        handleSlideAreaRect.anchorMin = Vector2.zero;
+        handleSlideAreaRect.anchorMax = Vector2.one;
+        handleSlideAreaRect.offsetMin = new Vector2(10f, 0f);
+        handleSlideAreaRect.offsetMax = new Vector2(-10f, 0f);
+
+        GameObject handleObj = new GameObject("Handle");
+        handleObj.transform.SetParent(handleSlideAreaObj.transform, false);
+        Image handleImage = handleObj.AddComponent<Image>();
+        handleImage.color = Color.black;
+        RectTransform handleRect = handleObj.GetComponent<RectTransform>();
+        handleRect.anchorMin = new Vector2(0.5f, 0f);
+        handleRect.anchorMax = new Vector2(0.5f, 1f);
+        handleRect.sizeDelta = new Vector2(20f, 0f);
+
+        slider.fillRect = fillRect;
+        slider.handleRect = handleRect;
+        slider.targetGraphic = handleImage;
+        slider.direction = Slider.Direction.LeftToRight;
+
+        slider.onValueChanged.AddListener((float newValue) =>
+        {
+            float clamped = Mathf.Clamp(newValue, MinButtonScale, MaxButtonScale);
+            buttonProfile.scale = new Vector2(clamped, clamped);
+
+            if (gamepadConfig != null)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorUtility.SetDirty(gamepadConfig);
+#endif
+            }
+        });
     }
 
     void OnDisable()
