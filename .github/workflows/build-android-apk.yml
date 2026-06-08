@@ -1,0 +1,33 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-android-apk:
+    name: Build (Android APK)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Build APK
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: 6000.0.43f1
+          targetPlatform: Android
+          buildMethod: PhonePad.Editor.Build.BuildAndroid.Build
+          buildsPath: Builds
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Phone2Pad-Android-APK
+          path: Builds/Android/*.apk
+          if-no-files-found: error

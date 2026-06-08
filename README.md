@@ -8,6 +8,34 @@ It allows your phone and connected controller to function similarly to popular g
 
 Demostrative Video: https://www.youtube.com/watch?v=13fSelx3i2I 
 
+## Build Android APK
+
+### Prerequisites
+- Unity `6000.0.43f1` (see `ProjectSettings/ProjectVersion.txt`)
+- Android Build Support module installed in Unity Hub (SDK/NDK + OpenJDK)
+
+### Build in Unity Editor
+1. Open the project in Unity
+2. `File` → `Build Settings...` → select `Android` → `Switch Platform`
+3. Click `Build` and choose an output path ending in `.apk`
+
+### Build from command line (Unity batchmode)
+This repository includes a build method at `Assets/Editor/Build/BuildAndroid.cs`.
+
+Example (adjust the Unity executable path for your OS):
+`Unity -quit -batchmode -projectPath . -executeMethod PhonePad.Editor.Build.BuildAndroid.Build -outputPath Builds/Android/Phone2Pad.apk`
+
+### Build via GitHub Actions
+Run the `Build Android APK` workflow and download the `Phone2Pad-Android-APK` artifact.
+
+Notes:
+- The workflow requires a `UNITY_LICENSE` GitHub Actions secret.
+- To install an *updated* APK over an existing install, it must be signed with the same keystore as the already-installed app.
+
+## Install APK on Android
+- On your phone, open the downloaded `.apk` and tap `Install`
+- If prompted: `Settings` → `Apps` → (Browser / Files) → `Install unknown apps` → allow
+
 ## Technical specification
 
 ![image](https://github.com/user-attachments/assets/22369b47-ee61-48ff-9f0d-dd9c8264fe63)
