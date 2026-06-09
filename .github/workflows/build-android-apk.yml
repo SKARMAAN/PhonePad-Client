@@ -15,7 +15,18 @@ jobs:
         with:
           lfs: false
 
+      - name: Check Unity license secret
+        id: unity-license
+        run: |
+          if [ -z "${{ secrets.UNITY_LICENSE }}" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::UNITY_LICENSE secret is not configured. Skipping Android APK build."
+          else
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build APK
+        if: steps.unity-license.outputs.available == 'true'
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -26,8 +37,13 @@ jobs:
           buildsPath: Builds
 
       - name: Upload APK artifact
+        if: steps.unity-license.outputs.available == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: Phone2Pad-Android-APK
           path: Builds/Android/*.apk
           if-no-files-found: error
+
+      - name: Build skipped note
+        if: steps.unity-license.outputs.available != 'true'
+        run: echo "Android APK build was skipped because UNITY_LICENSE secret is not configured."
