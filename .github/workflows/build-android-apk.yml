@@ -18,11 +18,9 @@ jobs:
       - name: Check Unity license secret
         id: unity-license
         run: |
-          if [ -z "${{ secrets.UNITY_LICENSE }}" ]; then
-            echo "available=false" >> "$GITHUB_OUTPUT"
+          echo "available=${{ secrets.UNITY_LICENSE != '' }}" >> "$GITHUB_OUTPUT"
+          if [ "${{ secrets.UNITY_LICENSE == '' }}" = "true" ]; then
             echo "::warning::UNITY_LICENSE secret is not configured. Skipping Android APK build."
-          else
-            echo "available=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build APK
@@ -45,5 +43,5 @@ jobs:
           if-no-files-found: error
 
       - name: Build skipped note
-        if: steps.unity-license.outputs.available != 'true'
+        if: steps.unity-license.outputs.available == 'false'
         run: echo "Android APK build was skipped because UNITY_LICENSE secret is not configured."
